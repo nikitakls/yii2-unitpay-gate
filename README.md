@@ -49,15 +49,17 @@ You can use result action in you controller:
 ```php
 class PaymentController extends Controller
 {
-
+    
+    public $enableCsrfValidation = false;
+    
     public $unitpay = 'unitpay';
     
     
-    public function actionInvoice($id)
+    public function actionInvoice()
     {
         $model = new Invoice();
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            /** @var \robokassa\Merchant $merchant */
+            /** @var \nikitakls\unitpay\Merchant $merchant */
             $merchant = Yii::$app->get($this->unitpay);
             return $this->redirect($merchant->payment($model->sum, $model->id, 'Пополнение счета', Yii::$app->user->identity->email, $model->phone));
         } else {

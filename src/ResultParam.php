@@ -20,27 +20,33 @@ class ResultParam
         $this->_param = $data;
     }
 
-    public function getProfit(){
+    public function getProfit()
+    {
         return ArrayHelper::getValue($this->_param, 'profit');
     }
 
-    public function getPayerSum(){
+    public function getPayerSum()
+    {
         return ArrayHelper::getValue($this->_param, 'payerSum');
     }
 
-    public function getOrderId(){
+    public function getOrderId()
+    {
         return ArrayHelper::getValue($this->_param, 'account');
     }
 
-    public function getOrderSum(){
+    public function getOrderSum()
+    {
         return ArrayHelper::getValue($this->_param, 'orderSum');
     }
 
-    public function getOrderCurrency(){
+    public function getOrderCurrency()
+    {
         return ArrayHelper::getValue($this->_param, 'orderCurrency');
     }
 
-    public function getErrorMessage(){
+    public function getErrorMessage()
+    {
         return ArrayHelper::getValue($this->_param, 'errorMessage');
     }
 

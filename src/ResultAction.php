@@ -8,35 +8,30 @@
 
 namespace nikitakls\unitpay;
 
-use nikitakls\unitpay\lib\UnitPay;
 use yii\base\Action;
 
 class ResultAction extends Action
 {
     /**
-     * @var string $unitpay
-     */
-    protected $unitpay = 'unitpay';
-
-    /**
-     * @var Merchant $merchant
-     */
-    protected $merchant;
-
-    /**
      * @var callable callback when gate perform payment
      */
     public $payCallback;
-
     /**
      * @var callable callback before perform payment
      */
     public $checkCallback;
-
     /**
      * @var callable callback if fail payment
      */
     public $failCallback;
+    /**
+     * @var string $unitpay
+     */
+    protected $unitpay = 'unitpay';
+    /**
+     * @var Merchant $merchant
+     */
+    protected $merchant;
 
     /**
      * Runs the action.
@@ -44,12 +39,15 @@ class ResultAction extends Action
     public function run()
     {
         if (!isset($_REQUEST['method'], $_REQUEST['params'])) {
-            throw new InvalidConfigException;
+            throw new \InvalidArgumentException('Invalid params');
         }
         $method = $_REQUEST['method'];
         $params = new ResultParam($_REQUEST['params']);
 
         $this->merchant->checkHandlerRequest();
+        if ($this->merchant->orderCurrency != $params->getOrderCurrency()) {
+            throw new \InvalidArgumentException('Currency not equal');
+        }
 
         switch ($method) {
             case 'check':
@@ -58,10 +56,8 @@ class ResultAction extends Action
                 return $this->callback($this->payCallback, $params);
             case 'error':
                 return $this->callback($this->failCallback, $params);
-            // Method Refund means that the money returned to the client
             default:
-                // Please cancel the order
-                throw new InvalidConfigException('Invalid method.');
+                throw new \InvalidArgumentException('Invalid method.');
         }
     }
 
